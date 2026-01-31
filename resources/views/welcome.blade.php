@@ -79,6 +79,7 @@
                                             stroke-linecap="square"
                                         />
                                     </svg>
+                                    G
                                 </a>
                             </span>
                         </li>
