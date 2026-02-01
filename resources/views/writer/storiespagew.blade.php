@@ -60,9 +60,9 @@
                 </span>
             </div>
             <div class="flex items-center gap-4">
-                <button class="p-2 border rounded-full hover:bg-gray-100">
+                <a href="/writer/write" class="p-2 border rounded-full hover:bg-gray-100">
                     ✏️
-                </button>
+                </a>
                 <div class="w-8 h-8 bg-gray-400 rounded-full"></div>
             </div>
         </div>
@@ -78,104 +78,141 @@
         <div>
             <!-- Drafts -->
             <div class="tab-panel" data-tab="drafts">
-            <div class="flex flex-col gap-4">
+                <div class="flex flex-col gap-4">
+                    @forelse($drafts as $draft)
+                        <div class="flex items-center bg-gray-200 rounded-lg pr-6 py-0 gap-6">
+                            <!-- Picture (nyatu di card) -->
+                            <div class="w-32 h-24 bg-gray-300 rounded-lg flex items-center justify-center text-gray-700 overflow-hidden">
+                                @if($draft->cover_image)
+                                    <img src="{{ $draft->cover_image }}" alt="Cover" class="w-full h-full object-cover">
+                                @else
+                                    <span>No Image</span>
+                                @endif
+                            </div>
 
-                <div class="flex items-center bg-gray-200 rounded-lg pr-6 py-0 gap-6">
+                            <!-- Title & Description -->
+                            <div class="flex-1">
+                                <h3 class="text-blue-900 font-semibold">{{ $draft->title ?: 'Untitled' }}</h3>
+                                <p class="text-sm text-blue-900 opacity-80 line-clamp-2">{{ strip_tags(substr($draft->content, 0, 100)) }}...</p>
+                            </div>
 
-                    <!-- Picture (nyatu di card) -->
-                    <div class="w-32 h-24 bg-gray-300 rounded-lg flex items-center justify-center text-gray-700">
-                        Gambar A
-                    </div>
+                            <!-- Status -->
+                            <div class="w-28 text-blue-900 text-sm text-center">
+                                Draft
+                            </div>
 
-                    <!-- Title & Description -->
-                    <div class="flex-1">
-                        <h3 class="text-blue-900 font-semibold">TITLE</h3>
-                        <p class="text-sm text-blue-900 opacity-80">Description</p>
-                    </div>
+                            <!-- Actions -->
+                            <a href="/writer/write/{{ $draft->id }}" class="w-16 text-blue-900 hover:underline text-center">
+                                Edit
+                            </a>
 
-                    <!-- Status -->
-                    <div class="w-28 text-blue-900 text-sm text-center">
-                        Draft
-                    </div>
-
-                    <!-- Actions -->
-                    <button class="w-16 text-blue-900 hover:underline text-center">
-                        Edit
-                    </button>
-
-                    <button class="w-16 text-blue-900 hover:underline text-center">
-                        Delete
-                    </button>
-                </div>
+                            <form action="/writer/stories/{{ $draft->id }}" method="POST" class="inline" onsubmit="return confirm('Are you sure?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-16 text-blue-900 hover:underline text-center">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    @empty
+                        <div class="text-center py-8 text-gray-500">
+                            <p>No drafts yet</p>
+                        </div>
+                    @endforelse
                 </div>
             </div>
 
             <!-- Scheduled -->
             <div class="tab-panel hidden" data-tab="scheduled">
                 <div class="flex flex-col gap-4">
+                    @forelse($scheduled as $schedule)
+                        <div class="flex items-center bg-gray-200 rounded-lg pr-6 py-0 gap-6">
+                            <!-- Picture (nyatu di card) -->
+                            <div class="w-32 h-24 bg-gray-300 rounded-lg flex items-center justify-center text-gray-700 overflow-hidden">
+                                @if($schedule->cover_image)
+                                    <img src="{{ $schedule->cover_image }}" alt="Cover" class="w-full h-full object-cover">
+                                @else
+                                    <span>No Image</span>
+                                @endif
+                            </div>
 
-                <div class="flex items-center bg-gray-200 rounded-lg pr-6 py-0 gap-6">
+                            <!-- Title & Description -->
+                            <div class="flex-1">
+                                <h3 class="text-blue-900 font-semibold">{{ $schedule->title }}</h3>
+                                <p class="text-sm text-blue-900 opacity-80 line-clamp-2">{{ strip_tags(substr($schedule->content, 0, 100)) }}...</p>
+                                <p class="text-xs text-gray-500 mt-1">Scheduled: {{ $schedule->scheduled_at ? \Carbon\Carbon::parse($schedule->scheduled_at)->format('M d, Y H:i') : 'Not set' }}</p>
+                            </div>
 
-                <!-- Picture (nyatu di card) -->
-                <div class="w-32 h-24 bg-gray-300 rounded-lg flex items-center justify-center text-gray-700">
-                    Gambar A
+                            <!-- Status -->
+                            <div class="w-28 text-blue-900 text-sm text-center">
+                                Scheduled
+                            </div>
+
+                            <!-- Actions -->
+                            <a href="/writer/write/{{ $schedule->id }}" class="w-16 text-blue-900 hover:underline text-center">
+                                Edit
+                            </a>
+
+                            <form action="/writer/stories/{{ $schedule->id }}" method="POST" class="inline" onsubmit="return confirm('Are you sure?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-16 text-blue-900 hover:underline text-center">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    @empty
+                        <div class="text-center py-8 text-gray-500">
+                            <p>No scheduled articles yet</p>
+                        </div>
+                    @endforelse
                 </div>
-
-                <!-- Title & Description -->
-                <div class="flex-1">
-                    <h3 class="text-blue-900 font-semibold">TITLE</h3>
-                    <p class="text-sm text-blue-900 opacity-80">Description</p>
-                </div>
-
-                <!-- Status -->
-                <div class="w-28 text-blue-900 text-sm text-center">
-                    Scheduled
-                </div>
-
-                <!-- Actions -->
-                <button class="w-16 text-blue-900 hover:underline text-center">
-                    Edit
-                </button>
-
-                <button class="w-16 text-blue-900 hover:underline text-center">
-                    Delete
-                </button>
-            </div>
-            </div>
             </div>
 
             <!-- Published -->
             <div class="tab-panel hidden" data-tab="published">
                 <div class="flex flex-col gap-4">
+                    @forelse($published as $publish)
+                        <div class="flex items-center bg-gray-200 rounded-lg pr-6 py-0 gap-6">
+                            <!-- Picture (nyatu di card) -->
+                            <div class="w-32 h-24 bg-gray-300 rounded-lg flex items-center justify-center text-gray-700 overflow-hidden">
+                                @if($publish->cover_image)
+                                    <img src="{{ $publish->cover_image }}" alt="Cover" class="w-full h-full object-cover">
+                                @else
+                                    <span>No Image</span>
+                                @endif
+                            </div>
 
-                    <div class="flex items-center bg-gray-200 rounded-lg pr-6 py-0 gap-6">
+                            <!-- Title & Description -->
+                            <div class="flex-1">
+                                <h3 class="text-blue-900 font-semibold">{{ $publish->title }}</h3>
+                                <p class="text-sm text-blue-900 opacity-80 line-clamp-2">{{ strip_tags(substr($publish->content, 0, 100)) }}...</p>
+                                <p class="text-xs text-gray-500 mt-1">Published: {{ $publish->created_at->format('M d, Y') }}</p>
+                            </div>
 
-                    <!-- Picture (nyatu di card) -->
-                    <div class="w-32 h-24 bg-gray-300 rounded-lg flex items-center justify-center text-gray-700">
-                        Gambar A
-                    </div>
+                            <!-- Status -->
+                            <div class="w-28 text-blue-900 text-sm text-center">
+                                Published
+                            </div>
 
-                    <!-- Title & Description -->
-                    <div class="flex-1">
-                        <h3 class="text-blue-900 font-semibold">TITLE</h3>
-                        <p class="text-sm text-blue-900 opacity-80">Description</p>
-                    </div>
+                            <!-- Actions -->
+                            <a href="/writer/write/{{ $publish->id }}" class="w-16 text-blue-900 hover:underline text-center">
+                                Edit
+                            </a>
 
-                    <!-- Status -->
-                    <div class="w-28 text-blue-900 text-sm text-center">
-                        Published
-                    </div>
-
-                    <!-- Actions -->
-                    <button class="w-16 text-blue-900 hover:underline text-center">
-                        Edit
-                    </button>
-
-                    <button class="w-16 text-blue-900 hover:underline text-center">
-                        Delete
-                    </button>
-
-                </div>
+                            <form action="/writer/stories/{{ $publish->id }}" method="POST" class="inline" onsubmit="return confirm('Are you sure?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-16 text-blue-900 hover:underline text-center">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    @empty
+                        <div class="text-center py-8 text-gray-500">
+                            <p>No published articles yet</p>
+                        </div>
+                    @endforelse
                 </div>
             </div>
         </div>
