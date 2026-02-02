@@ -26,6 +26,16 @@ class Article extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class, 'id_article');
+    }
+
+    public function likes()
+    {
+        return $this->belongsToMany(\App\Models\User::class, 'article_likes', 'article_id', 'user_id')->withTimestamps();
+    }
+
+    public function savedByUsers()
+    {
+        return $this->belongsToMany(\App\Models\User::class, 'user_saved_articles', 'article_id', 'user_id')->withTimestamps();
     }
 }

@@ -17,19 +17,39 @@ Route::get('/register', [App\Http\Controllers\AuthController::class, 'register']
 Route::post('/register', [App\Http\Controllers\AuthController::class, 'store'])->name('register.store');
 
 Route::get('/homepageuser', function () {
-    return view('user.homepageu');
+    $hiddenIds = session('hidden_article_ids', []);
+    $userId = session('user_id');
+    $articles = Article::where('status', 'published')
+        ->whereNotIn('id', $hiddenIds)
+        ->withCount(['likes', 'comments'])
+        ->latest()
+        ->get();
+    $savedArticleIds = $userId ? (\App\Models\User::find($userId)?->savedArticles()->pluck('articles.id')->toArray() ?? []) : [];
+    return view('user.homepageu', compact('articles', 'savedArticleIds'));
 })->name('user.homepage');
 
 Route::get('/libraryuser', function () {
-    return view('user.librarypageu');
+    $userId = session('user_id');
+    $savedArticles = $userId ? \App\Models\User::find($userId)?->savedArticles()->where('status', 'published')->withCount(['likes', 'comments'])->orderByPivot('created_at', 'desc')->get() : collect();
+    return view('user.librarypageu', compact('savedArticles'));
 });
 
 Route::get('/homepagewriter', function () {
-    return view('writer.homepagew');
+    $hiddenIds = session('hidden_article_ids', []);
+    $userId = session('user_id');
+    $articles = Article::where('status', 'published')
+        ->whereNotIn('id', $hiddenIds)
+        ->withCount(['likes', 'comments'])
+        ->latest()
+        ->get();
+    $savedArticleIds = $userId ? (\App\Models\User::find($userId)?->savedArticles()->pluck('articles.id')->toArray() ?? []) : [];
+    return view('writer.homepagew', compact('articles', 'savedArticleIds'));
 })->name('writer.homepage');
 
 Route::get('/librarywriter', function () {
-    return view('writer.librarypagew');
+    $userId = session('user_id');
+    $savedArticles = $userId ? \App\Models\User::find($userId)?->savedArticles()->where('status', 'published')->withCount(['likes', 'comments'])->orderByPivot('created_at', 'desc')->get() : collect();
+    return view('writer.librarypagew', compact('savedArticles'));
 });
 
 Route::get('/storieswriter', [App\Http\Controllers\Writer\StoriesController::class, 'index']);
@@ -43,11 +63,21 @@ Route::post('/writer/write/upload-image', [App\Http\Controllers\Writer\WriteCont
 Route::post('/writer/write/upload-video', [App\Http\Controllers\Writer\WriteController::class, 'uploadVideo']);
 
 Route::get('/homepageadmin', function () {
-    return view('admin.homepagea');
+    $hiddenIds = session('hidden_article_ids', []);
+    $userId = session('user_id');
+    $articles = Article::where('status', 'published')
+        ->whereNotIn('id', $hiddenIds)
+        ->withCount(['likes', 'comments'])
+        ->latest()
+        ->get();
+    $savedArticleIds = $userId ? (\App\Models\User::find($userId)?->savedArticles()->pluck('articles.id')->toArray() ?? []) : [];
+    return view('admin.homepagea', compact('articles', 'savedArticleIds'));
 })->name('admin.homepage');
 
 Route::get('/libraryadmin', function () {
-    return view('admin.librarypagea');
+    $userId = session('user_id');
+    $savedArticles = $userId ? \App\Models\User::find($userId)?->savedArticles()->where('status', 'published')->withCount(['likes', 'comments'])->orderByPivot('created_at', 'desc')->get() : collect();
+    return view('admin.librarypagea', compact('savedArticles'));
 });
 
 Route::get('/managementadmin', function () {
@@ -90,6 +120,12 @@ Route::delete('/managementadmin/user/{user}', function (\App\Models\User $user) 
     $user->delete();
     return redirect()->back()->with('success', 'Pengguna berhasil dihapus.');
 })->name('managementadmin.user.destroy');
+
+Route::get('/article/{article}', [App\Http\Controllers\ArticleController::class, 'show'])->name('article.show');
+Route::post('/article/{article}/like', [App\Http\Controllers\ArticleController::class, 'toggleLike'])->name('article.like');
+Route::post('/article/{article}/comment', [App\Http\Controllers\ArticleController::class, 'storeComment'])->name('article.comment');
+Route::post('/article/{article}/save', [App\Http\Controllers\ArticleController::class, 'toggleSave'])->name('article.save');
+Route::post('/article/{article}/hide', [App\Http\Controllers\ArticleController::class, 'hide'])->name('article.hide');
 
 
 

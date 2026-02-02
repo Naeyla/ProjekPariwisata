@@ -78,19 +78,20 @@
             <!-- Your Lists -->
             <div class="tab-panel" data-tab="yourLists">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                    <div class="bg-gray-200 rounded-lg overflow-hidden">
-                        <div class="p-4 text-blue-900">Your Lists - Rekomendasi 1</div>
-                        <div class="w-full h-40 bg-gray-300 flex items-center justify-center text-gray-700">Gambar 1</div>
-                    </div>
-                    <div class="bg-gray-200 rounded-lg overflow-hidden">
-                        <div class="p-4 text-blue-900">Your Lists - Rekomendasi 2</div>
-                        <div class="w-full h-40 bg-gray-300 flex items-center justify-center text-gray-700">Gambar 2</div>
-                    </div>
-                    <div class="bg-gray-200 rounded-lg overflow-hidden">
-                        <div class="p-4 text-blue-900">Your Lists - Rekomendasi 3</div>
-                        <div class="w-full h-40 bg-gray-300 flex items-center justify-center text-gray-700">Gambar 3</div>
-                    </div>
-                    <!-- Bisa tambah lagi, grid akan otomatis bikin baris baru -->
+                    @forelse($savedArticles ?? [] as $article)
+                    <a href="{{ route('article.show', $article) }}" class="bg-gray-200 rounded-lg overflow-hidden hover:bg-gray-300 transition block">
+                        <div class="p-4 text-blue-900 font-medium">{{ $article->title }}</div>
+                        <div class="w-full h-40 bg-gray-300 flex items-center justify-center overflow-hidden">
+                            @if($article->cover_image)
+                                <img src="{{ $article->cover_image }}" alt="{{ $article->title }}" class="w-full h-full object-cover">
+                            @else
+                                <span class="text-gray-700">—</span>
+                            @endif
+                        </div>
+                    </a>
+                    @empty
+                    <div class="col-span-full p-4 text-gray-500">Belum ada artikel tersimpan. Simpan artikel dari tab For You di Home.</div>
+                    @endforelse
                 </div>
             </div>
 

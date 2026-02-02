@@ -29,6 +29,9 @@
     <header class="sticky top-0 bg-white border-b border-gray-200 z-50">
         <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
             <div class="flex items-center gap-4">
+                <button type="button" onclick="history.back()" class="p-2 rounded-full hover:bg-gray-100 text-gray-600 hover:text-gray-800 flex items-center justify-center" title="Kembali">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                </button>
                 <h1 class="text-2xl font-logo text-blue-900">KisahOmbak</h1>
                 <span class="text-sm text-gray-500" id="status-text">Draft</span>
                 <span class="text-sm text-gray-500 hidden" id="saved-text">Saved</span>
@@ -82,8 +85,9 @@
             <div contenteditable="true" id="title-editor"
                 class="text-5xl font-bold outline-none focus:outline-none min-h-[60px]" placeholder="Title"
                 data-placeholder="Title"></div>
-            <button id="add-cover-btn"
-                class="absolute left-[-60px] top-2 w-10 h-10 rounded-full border border-gray-300 bg-white hover:bg-gray-50 flex items-center justify-center text-gray-600 hover:text-gray-800 hidden">
+            <button type="button" id="add-cover-btn"
+                class="absolute left-[-60px] top-2 w-10 h-10 rounded-full border border-gray-300 bg-white hover:bg-gray-50 flex items-center justify-center text-gray-600 hover:text-gray-800"
+                title="Tambah cover image">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
@@ -229,14 +233,12 @@
             if (this.textContent === 'Title') {
                 this.textContent = '';
             }
-            addCoverBtn.classList.remove('hidden');
         });
 
         titleEditor.addEventListener('blur', function() {
             if (this.textContent.trim() === '') {
                 this.textContent = 'Title';
             }
-            addCoverBtn.classList.add('hidden');
             autoSave();
         });
 
@@ -537,6 +539,7 @@
                 cover_image: coverImageUrl,
                 publish_type: type,
                 scheduled_at: scheduledAt,
+                article_id: currentArticleId || null,
                 _token: csrfToken
             };
 
