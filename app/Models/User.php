@@ -12,10 +12,10 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
-        'role', // admin / writer / user
+        'role',
     ];
 
     protected $hidden = [
@@ -27,15 +27,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    // 🔗 RELATIONSHIPS
 
-    // user ↔ article (many to many)
     public function articles()
     {
         return $this->belongsToMany(Article::class, 'article_user');
     }
 
-    // user → comment (one to many)
     public function comments()
     {
         return $this->hasMany(Comment::class);

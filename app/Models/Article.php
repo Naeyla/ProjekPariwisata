@@ -10,20 +10,20 @@ class Article extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'title',
         'content',
         'cover_image',
+        'status',
+        'scheduled_at',
     ];
 
-    // 🔗 RELATIONSHIPS
 
-    // article ↔ user (multi-writer)
     public function users()
     {
         return $this->belongsToMany(User::class, 'article_user');
     }
 
-    // article → comments
     public function comments()
     {
         return $this->hasMany(Comment::class);

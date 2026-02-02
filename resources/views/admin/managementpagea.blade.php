@@ -141,10 +141,14 @@
                                 <td class="px-6 py-4">
                                     <img src="{{ $article->cover_image }}" class="w-14 h-14 rounded-lg object-cover">
                                 </td>
-                                <td class="px-6 py-4 flex gap-3">
+                                <td class="px-6 py-4 flex gap-3 items-center">
                                     <a class="text-blue-600">👁</a>
                                     <a class="text-yellow-600">✏</a>
-                                    <button class="text-red-600">🗑</button>
+                                    <form method="POST" action="{{ route('managementadmin.article.destroy', $article) }}" class="inline" onsubmit="return confirm('Yakin ingin menghapus artikel ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-600 hover:underline cursor-pointer bg-transparent border-0 p-0">🗑</button>
+                                    </form>
                                 </td>
                             </tr>
                             @empty
@@ -260,7 +264,15 @@
                                 <td class="px-6 py-4">{{ $user->email }}</td>
                                 <td class="px-6 py-4 capitalize">{{ $user->role }}</td>
                                 <td class="px-6 py-4">
-                                    <button class="text-red-300">🗑</button>
+                                    @if ($user->role !== 'admin')
+                                    <form method="POST" action="{{ route('managementadmin.user.destroy', $user) }}" class="inline" onsubmit="return confirm('Yakin ingin menghapus pengguna ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-600 hover:underline cursor-pointer bg-transparent border-0 p-0">🗑</button>
+                                    </form>
+                                    @else
+                                    <span class="text-slate-400">—</span>
+                                    @endif
                                 </td>
                             </tr>
                             @empty
