@@ -69,20 +69,37 @@ class WriteController extends Controller
             'content' => 'required|string',
             'publish_type' => 'required|in:now,scheduled',
             'scheduled_at' => 'required_if:publish_type,scheduled|date|nullable',
+            'article_id' => 'nullable|exists:articles,id',
         ]);
 
         $userId = session('user_id');
 
-        $article = Article::create([
-            'user_id' => $userId,
-            'title' => $request->title,
-            'content' => $request->content,
-            'cover_image' => $request->cover_image,
-            'status' => $request->publish_type === 'scheduled' ? 'scheduled' : 'published',
-            'scheduled_at' => $request->publish_type === 'scheduled'
-                ? $request->scheduled_at
-                : null,
-        ]);
+        $articleId = $request->article_id;
+        $article = null;
+        if ($articleId) {
+            $article = Article::where('id', $articleId)->where('user_id', $userId)->where('status', 'draft')->first();
+        }
+
+        if ($article) {
+            $article->update([
+                'title' => $request->title,
+                'content' => $request->content,
+                'cover_image' => $request->cover_image,
+                'status' => $request->publish_type === 'scheduled' ? 'scheduled' : 'published',
+                'scheduled_at' => $request->publish_type === 'scheduled' ? $request->scheduled_at : null,
+            ]);
+        } else {
+            $article = Article::create([
+                'user_id' => $userId,
+                'title' => $request->title,
+                'content' => $request->content,
+                'cover_image' => $request->cover_image,
+                'status' => $request->publish_type === 'scheduled' ? 'scheduled' : 'published',
+                'scheduled_at' => $request->publish_type === 'scheduled'
+                    ? $request->scheduled_at
+                    : null,
+            ]);
+        }
 
         return response()->json([
             'success' => true,
