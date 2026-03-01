@@ -5,7 +5,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>KisahOmbak - {{ $article->title }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">    
     <script>
         tailwind.config = {
             theme: {
@@ -18,6 +18,7 @@
             }
         }
     </script>
+    <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
 </head>
 <body class="font-body bg-white text-gray-800">
 
@@ -29,7 +30,12 @@
                 </button>
                 <h1 class="text-2xl font-logo text-blue-900">KisahOmbak</h1>
             </div>
-            <div class="w-8 h-8 bg-gray-400 rounded-full"></div>
+            <div class="flex items-center gap-4">
+                        <span
+                            class="iconify text-blue-800 cursor-pointer text-5xl hover:text-blue-600 transition"
+                            data-icon="ic:round-account-circle">
+                        </span>
+                    </div>
         </div>
     </header>
 

@@ -57,3 +57,99 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+# KisahOmbak
+
+KisahOmbak adalah web yang menyediakan banyak artikel tentang destinasi wisata air yang ada di Kalimantan Timur dengan menjelaskan dari lokasi, harga tiket masuk, akomodasi, paket aktivitas, dan susunan jadwal untuk setiap wisata air.
+
+## Tujuan Web
+- Ditujukan untuk keluarga dan remaja yang ingin mengunjungi destinasi wisata air di Kaltim
+- Menulis artikel dengan informatif dan akurat untuk dibaca oleh setiap pengguna
+
+## Tujuan Proyek
+- Memenuhi tugas proyek dari basis data
+- Melatih kerja tim dan pengembangan web
+- Menerapkan konsep CRUD, autentikasi, dan UI/UX
+
+## Teknologi yang Digunakan
+- **Framework** : Laravel
+- **Frontend** : Blade / Tailwind CSS
+- **Backend** : PHP
+- **Database** : MySQL
+- **Tools** : Git, GitHub
+
+## Fitur Utama
+- Login & Register
+- CRUD data (pengguna, artikel, komentar, like, dan rating)
+- Upload gambar
+- Logout
+
+## Role Pengguna
+- **Admin** : Mengelola pengguna dan artikel
+- **Writer** : Menulis, menjadwalkan, dan mempublikasikan artikel
+- **User** : Membaca, memberi komentar, like, dan rating
+
+## Struktur Folder (opsional)
+```text
+├── app
+│   └── console
+│       └── commands
+│           └── PublishScheduledArticles.php
+|   └── Kernel.php
+├── http/controllers
+|   └── admin
+|       └── ArticleController.php
+|       └── UserController.php
+|   └── writer
+|       └── ArticleController.php
+|       └── StoriesController.php
+|       └── WriteController.php
+|   └── ArticleController.php
+|   └── AuthController.php
+|   └── CommentController.php
+|   └── Controller.php
+├── models
+|   └── Article.php
+|   └── Comment.php
+|   └── User.php
+├── providers
+│   └── AppServiceProvider..php
+├── database
+|   └── factories
+|   └── migrations
+├── public
+|   └── images
+|       └── sea.jpg
+├── resources
+|   └── views
+|       └── admin
+|           └── homepagea.blade.php
+|           └── librarypagea.blade.php
+|           └── managementpagea.blade.php
+|       └── article
+|           └── detail.blade.php
+|       └── auth
+|           └── login.blade.php
+|           └── register.blade.php
+|       └── user
+|           └── homepageu.blade.php
+|           └── librarypageu.blade.php
+|       └── writer
+|           └── homepagew.blade.php
+|           └── librarypagew.blade.php
+|           └── storiespagew.blade.php
+|           └── writepage.blade.php
+|       └── landingpage.blade.php
+├── routes
+|   └── console.php
+|   └── web.php
+└── README.md
+
+## Alur KisahOmbak di Notion
+https://www.notion.so/Alur-KisahOmbak-2fe7f6e8b7908091947bfe6cb6dd44bf?source=copy_link
+
+## ERD KisahOmbak di draw.io
+https://drive.google.com/file/d/1vo1KA8IKScbHvnTrAZbb6fx6SKc4Xu6p/view?usp=drive_link
+
+## UI/UX KisahOmbak di Figma
+hhttps://www.figma.com/design/585bRULRsjqQoOjxfSH7NQ/Untitled?node-id=0-1&t=lKViiuXPTWHzdku4-1

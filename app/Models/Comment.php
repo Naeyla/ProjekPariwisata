@@ -25,4 +25,5 @@ class Comment extends Model
     {
         return $this->belongsTo(Article::class, 'id_article');
     }
+
 }

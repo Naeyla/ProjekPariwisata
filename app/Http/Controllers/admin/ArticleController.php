@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Article;
+use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
@@ -15,16 +16,21 @@ class ArticleController extends Controller
 
     public function edit($id)
     {
-        $article = Article::findOrFail($id);
-        return view('admin.articles.edit', compact('article'));
+    
     }
 
-    public function update($id)
+    public function update(Request $request, Article $article)
     {
-        $article = Article::findOrFail($id);
-        $article->update(request()->only('title', 'content', 'cover_image'));
+        $request->validate([
+            'title' => 'required|string',
+            'content' => 'required|string',
+        ]);
 
-        return redirect()->route('admin.articles.index');
+        $article->update($request->only('title', 'content'));
+
+        // Redirect kembali ke tab articles
+        return redirect()->route('managementadmin', ['tab' => 'articles'])
+                 ->with('success', 'Artikel berhasil diupdate!');
     }
 
     public function destroy($id)

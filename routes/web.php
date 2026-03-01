@@ -3,7 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Models\Article;
 use App\Models\Comment;
-
+use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Writer\ArticleController;
+use App\Http\Controllers\Writer\WriteController;
+use App\Http\Controllers\CommentController;
 
 Route::get('/', function () {
     return view('landingpage');
@@ -55,12 +59,27 @@ Route::get('/librarywriter', function () {
 Route::get('/storieswriter', [App\Http\Controllers\Writer\StoriesController::class, 'index']);
 Route::delete('/writer/stories/{id}', [App\Http\Controllers\Writer\StoriesController::class, 'destroy']);
 
+Route::get('/writer/write', [App\Http\Controllers\Writer\WriteController::class, 'create']);
 Route::get('/writer/write', [App\Http\Controllers\Writer\WriteController::class, 'index']);
 Route::post('/writer/write/save-draft', [App\Http\Controllers\Writer\WriteController::class, 'saveDraft']);
 Route::match(['put', 'post'], '/writer/write/update-draft/{id}', [App\Http\Controllers\Writer\WriteController::class, 'updateDraft']);
 Route::post('/writer/write/publish', [App\Http\Controllers\Writer\WriteController::class, 'publish']);
 Route::post('/writer/write/upload-image', [App\Http\Controllers\Writer\WriteController::class, 'uploadImage']);
 Route::post('/writer/write/upload-video', [App\Http\Controllers\Writer\WriteController::class, 'uploadVideo']);
+
+Route::prefix('writer')->middleware('auth')->group(function () {
+
+    Route::get('/stories', [ArticleController::class, 'index']);
+
+    Route::get('/write', [ArticleController::class, 'create']);
+    Route::post('/write', [ArticleController::class, 'store']);
+
+    Route::get('/stories/{article}/edit', [ArticleController::class, 'edit']);
+    Route::put('/stories/{article}', [ArticleController::class, 'update']);
+});
+
+Route::get('/writer/write', [WriteController::class, 'create']);
+Route::get('/writer/write/{article}', [WriteController::class, 'edit']);
 
 Route::get('/homepageadmin', function () {
     $hiddenIds = session('hidden_article_ids', []);
@@ -81,17 +100,14 @@ Route::get('/libraryadmin', function () {
 });
 
 Route::get('/managementadmin', function () {
-
     $tab = request('tab', 'articles');
 
     $articles = Article::latest()->paginate(10);
 
     $commentsQuery = Comment::with(['user', 'article'])->latest();
-
     if (request('article_id')) {
         $commentsQuery->where('id_article', request('article_id'));
     }
-
     $comments = $commentsQuery->paginate(10)->withQueryString();
 
     $usersQuery = \App\Models\User::latest();
@@ -106,12 +122,14 @@ Route::get('/managementadmin', function () {
         'comments',
         'users'
     ));
-});
+})->name('managementadmin');
 
-Route::delete('/managementadmin/article/{article}', function (Article $article) {
-    $article->delete();
-    return redirect()->back()->with('success', 'Artikel berhasil dihapus.');
-})->name('managementadmin.article.destroy');
+Route::get(
+    '/managementadmin/user/{user}/edit',
+    [App\Http\Controllers\Admin\UserController::class, 'edit']
+)->name('managementadmin.user.edit');
+
+Route::put('/managementadmin/user/{user}', [UserController::class, 'update'])->name('managementadmin.user.update');
 
 Route::delete('/managementadmin/user/{user}', function (\App\Models\User $user) {
     if ($user->role === 'admin') {
@@ -121,11 +139,26 @@ Route::delete('/managementadmin/user/{user}', function (\App\Models\User $user) 
     return redirect()->back()->with('success', 'Pengguna berhasil dihapus.');
 })->name('managementadmin.user.destroy');
 
+Route::get(
+    '/managementadmin/article/{article}/edit',
+    [App\Http\Controllers\Admin\ArticleController::class, 'edit']
+)->name('managementadmin.article.edit');
+
+Route::put('/managementadmin/article/{article}', [App\Http\Controllers\Admin\ArticleController::class, 'update'])
+     ->name('managementadmin.article.update');
+
+Route::delete('/managementadmin/article/{article}', function (Article $article) {
+    $article->delete();
+    return redirect()->back()->with('success', 'Artikel berhasil dihapus.');
+})->name('managementadmin.article.destroy');
+
 Route::get('/article/{article}', [App\Http\Controllers\ArticleController::class, 'show'])->name('article.show');
 Route::post('/article/{article}/like', [App\Http\Controllers\ArticleController::class, 'toggleLike'])->name('article.like');
 Route::post('/article/{article}/comment', [App\Http\Controllers\ArticleController::class, 'storeComment'])->name('article.comment');
 Route::post('/article/{article}/save', [App\Http\Controllers\ArticleController::class, 'toggleSave'])->name('article.save');
 Route::post('/article/{article}/hide', [App\Http\Controllers\ArticleController::class, 'hide'])->name('article.hide');
 
-
+Route::delete('/comment/{comment}', [CommentController::class, 'destroy'])
+    ->name('comment.destroy')
+    ->middleware('auth');
 

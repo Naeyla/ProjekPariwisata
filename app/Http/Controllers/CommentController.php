@@ -26,13 +26,16 @@ class CommentController extends Controller
 
     public function destroy($id)
     {
-        $comment = Comment::with('article.users')->findOrFail($id);
+        $comment = Comment::with('article')->findOrFail($id);
         $user = Auth::user();
 
         if (
-            $user->role === 'admin' ||
-            $comment->user_id === $user->id ||
-            $comment->article->users->contains($user->id)
+            $user->role === 'admin' ||                      // admin
+            $comment->user_id === $user->id ||              // owner komentar
+            (
+                $user->role === 'writer' &&
+                $comment->article->user_id === $user->id    // writer pemilik artikel
+            )
         ) {
             $comment->delete();
         }

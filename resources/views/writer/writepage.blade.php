@@ -8,7 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Libre+Baskerville:wght@400;700&display=swap"
         rel="stylesheet">
-
+    <!-- Iconfy -->
+    <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -38,23 +39,29 @@
             </div>
 
             <div class="flex items-center gap-4">
-                <div class="relative">
-                    <button id="publish-btn"
-                        class="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition">
-                        Publish
-                    </button>
-                    <div id="publish-dropdown"
-                        class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                        <button id="publish-now"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-t-lg">Publish now</button>
-                        <button id="publish-scheduled"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-b-lg">Schedule</button>
-                    </div>
+            <div class="relative">
+                <button id="publish-btn"
+                    class="bg-blue-800 text-white px-4 py-1 rounded-full hover:bg-blue-900 transition text-sm">
+                    Publish
+                </button>
+                <div id="publish-dropdown"
+                    class="hidden absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                    <button id="publish-now"
+                        class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-t-lg text-sm">Publish now</button>
+                    <button id="publish-scheduled"
+                        class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-b-lg text-sm">Schedule</button>
                 </div>
-                <button class="text-gray-600 hover:text-gray-800">⋯</button>
-                <button class="text-gray-600 hover:text-gray-800">🔔</button>
-                <div class="w-8 h-8 bg-gray-400 rounded-full"></div>
             </div>
+            <button class="text-gray-600 hover:text-gray-800">
+                <iconify-icon icon="mdi:bell-outline" width="24" height="24"></iconify-icon>
+            </button>
+            <div class="flex items-center gap-4">
+                        <span
+                            class="iconify text-blue-800 cursor-pointer text-5xl hover:text-blue-600 transition"
+                            data-icon="ic:round-account-circle">
+                        </span>
+                    </div>
+        </div>
         </div>
     </header>
 
@@ -172,6 +179,17 @@
         }
     </style>
 
+        @if(isset($article))
+    <script>
+        window.__EDIT_ARTICLE__ = {
+            id: {{ $article->id }},
+            title: @json($article->title),
+            content: @json($article->content),
+            cover_image: @json($article->cover_image),
+            status: @json($article->status),
+        };
+    </script>
+    @endif
 
     <script>
         let articleId = null;
@@ -564,6 +582,37 @@
                 console.error('Error publishing article:', error);
                 alert('Error publishing article');
             }
+        }
+
+        /* ======================
+        EDIT MODE INIT
+        ====================== */
+        if (window.__EDIT_ARTICLE__) {
+            const article = window.__EDIT_ARTICLE__;
+            currentArticleId = article.id;
+
+            if (article.title) {
+                titleEditor.textContent = article.title;
+            }
+
+            if (article.content) {
+                contentEditor.innerHTML = article.content;
+            }
+
+            if (article.cover_image) {
+                coverImageUrl = article.cover_image;
+                coverPreviewImg.src = article.cover_image;
+                coverPreview.classList.remove('hidden');
+                coverUploadArea.classList.add('hidden');
+                coverImageSection.classList.remove('hidden');
+            }
+
+            statusText.textContent =
+                article.status === 'published'
+                    ? 'Published'
+                    : article.status === 'scheduled'
+                    ? 'Scheduled'
+                    : 'Draft';
         }
     </script>
 </body>

@@ -11,6 +11,9 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Libre+Baskerville:wght@400;700&display=swap"
         rel="stylesheet">
+    
+    <!-- Iconfy -->
+    <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
 
     <script>
         tailwind.config = {
@@ -37,12 +40,21 @@
 
             <!-- Menu -->
             <nav class="flex flex-col gap-3">
-                <a href="/homepageuser" class="flex items-center gap-2 px-3 py-2 rounded-full bg-blue-900 text-white">
-                    <img src="/mnt/data/eca25925-1e87-48f2-b108-44483cf14fc1.png" class="w-5 h-5" alt="icon home">
+                <a href="/homepageuser"
+                class="flex items-center gap-3 px-4 py-2 rounded-full bg-blue-900 text-white">
+                    <span
+                        class="iconify text-xl"
+                        data-icon="iconamoon:home-bold">
+                    </span>
                     Home
                 </a>
-                <a href="/libraryuser" class="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100">
-                    <img src="/mnt/data/eca25925-1e87-48f2-b108-44483cf14fc1.png" class="w-5 h-5" alt="icon library">
+
+                <a href="/libraryuser"
+                class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-gray-100 text-blue-800">
+                    <span
+                        class="iconify text-xl"
+                        data-icon="solar:library-linear">
+                    </span>
                     Library
                 </a>
             </nav>
@@ -55,13 +67,18 @@
                 <div class="relative w-1/3">
                     <input type="text" placeholder="Search"
                         class="w-full border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <span class="absolute right-3 top-2.5 text-gray-400">
-                        🔍
+                    <span
+                        class="iconify absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-2xl"
+                        data-icon="ic:round-search">
                     </span>
                 </div>
                 <div class="flex items-center gap-4">
-
-                    <div class="w-8 h-8 bg-gray-400 rounded-full"></div>
+                    <div onclick="document.getElementById('logout-form').submit()">
+                        <span
+                            class="iconify text-blue-800 cursor-pointer text-5xl hover:text-blue-600 transition"
+                            data-icon="ic:round-account-circle">
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -79,7 +96,7 @@
                         @php $savedArticleIds = $savedArticleIds ?? []; @endphp
 
                         @forelse ($articles as $article)
-                            <div class="flex bg-gray-200 rounded-lg">
+                            <div class="flex bg-white shadow-xl rounded-lg">
 
                                 <!-- ================= LEFT CONTENT ================= -->
                                 <div class="flex-1 p-4 flex flex-col justify-between min-w-0">
@@ -87,7 +104,7 @@
                                     <!-- Judul & Deskripsi -->
                                     <div>
                                         <a href="{{ route('article.show', $article) }}"
-                                            class="text-blue-900 font-semibold text-lg hover:underline block">
+                                            class="text-blue-900 font-bold text-xl hover:underline block">
                                             {{ $article->title }}
                                         </a>
 
@@ -102,9 +119,9 @@
                                         <span class="flex items-center gap-1">
                                             <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 24 24">
                                                 <path d="M12 17.27L18.18 21l-1.64-7.03
-                     L22 9.24l-7.19-.61L12 2
-                     9.19 8.63 2 9.24l5.46 4.73
-                     L5.82 21z" />
+                                                L22 9.24l-7.19-.61L12 2
+                                                9.19 8.63 2 9.24l5.46 4.73
+                                                L5.82 21z" />
                                             </svg>
                                             {{ $article->created_at->format('d M Y, H:i') }}
                                         </span>
@@ -195,7 +212,7 @@
 
                                 <!-- ================= FOTO ================= -->
                                 <a href="{{ route('article.show', $article) }}"
-                                    class="w-40 min-h-[100px] bg-gray-300 flex-shrink-0 overflow-hidden">
+                                    class="w-40 min-h-[100px] bg-gray-300 flex-shrink-0 overflow-hidden rounded-lg">
                                     @if ($article->cover_image)
                                         <img src="{{ $article->cover_image }}" alt="{{ $article->title }}"
                                             class="w-full h-full object-cover">
@@ -247,3 +264,26 @@
                     });
                 });
             </script>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                @csrf
+            </form>
+            <script>
+            const searchInput = document.getElementById('searchInput');
+            const articleCards = document.querySelectorAll('.article-card');
+
+            searchInput.addEventListener('input', function () {
+                const keyword = this.value.toLowerCase();
+
+                articleCards.forEach(card => {
+                    const title = card.dataset.title;
+                    const content = card.dataset.content;
+
+                    if (title.includes(keyword) || content.includes(keyword)) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            });
+        </script>
+

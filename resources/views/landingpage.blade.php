@@ -59,9 +59,9 @@
         <div class="flex-1 text-right pr-10">
         <h2 class="font-headline text-[5rem] leading-tight">
             Lost at Sea,<br>
-            We Were<br>
-            Born to be<br>
-            Free.
+            Cause We <br>
+            Were Born <br>
+            to be Free.
         </h2>
 
        <!-- Tombol di bawah teks -->

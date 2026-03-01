@@ -14,6 +14,26 @@ class WriteController extends Controller
         return view('writer.writepage');
     }
 
+    public function create()
+    {
+        $userId = session('user_id');
+        if (!$userId) abort(403);
+
+        return view('writer.writepage', [
+            'article' => null
+        ]);
+    }
+
+    public function edit(Article $article)
+    {
+        $userId = session('user_id');
+        if (!$userId) abort(403);
+
+        abort_unless($article->user_id === $userId, 403);
+
+        return view('writer.writepage', compact('article'));
+    }
+
     public function saveDraft(Request $request)
     {
         $request->validate([
@@ -141,3 +161,4 @@ class WriteController extends Controller
         return response()->json(['error' => 'No video uploaded'], 400);
     }
 }
+

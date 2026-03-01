@@ -10,6 +10,9 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
 
+    <!-- Iconfy -->
+    <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -34,38 +37,74 @@
 
         <!-- Menu -->
         <nav class="flex flex-col gap-3">
-            <a href="/homepagewriter" class="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100">
-                <img src="/mnt/data/eca25925-1e87-48f2-b108-44483cf14fc1.png" class="w-5 h-5" alt="icon home">
-                Home
-            </a>
-            <a href="/librarywriter" class="flex items-center gap-2 px-3 py-2 rounded bg-blue-900 text-white">
-                <img src="/mnt/data/eca25925-1e87-48f2-b108-44483cf14fc1.png" class="w-5 h-5" alt="icon library">
-                Library
-            </a>
-            <a href="/storieswriter" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100">
-                <img src="/mnt/data/eca25925-1e87-48f2-b108-44483cf14fc1.png" class="w-5 h-5" alt="icon stories">
-                Stories
-            </a>
-        </nav>
+                <a href="/homepagewriter"
+                class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-gray-100 text-blue-800">
+                    <span
+                        class="iconify text-2xl"
+                        data-icon="iconamoon:home-bold">
+                    </span>
+                    Home
+                </a>
+
+                <a href="/librarywriter"
+                class="flex items-center gap-3 px-4 py-2 rounded-full bg-blue-900 text-white">
+                    <span
+                        class="iconify text-2xl"
+                        data-icon="solar:library-linear">
+                    </span>
+                    Library
+                </a>
+
+                <a href="/storieswriter"
+                class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-gray-100 text-blue-800">
+                    <span
+                        class="iconify text-2xl"
+                        data-icon="material-symbols:library-books-outline-rounded">
+                    </span>
+                    Stories
+                </a>
+            </nav>
     </aside>
 
     <!-- Main Content -->
     <main class="flex-1 p-6">
-        <!-- Top Bar -->
-        <div class="flex items-center justify-between mb-6">
-            <div class="relative w-1/3">
-                <input type="text" placeholder="Search" class="w-full border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <span class="absolute right-3 top-2.5 text-gray-400">
-                    🔍
-                </span>
-            </div>
-            <div class="flex items-center gap-4">
-                <button class="p-2 border rounded-full hover:bg-gray-100">
-                    ✏️
-                </button>
-                <div class="w-8 h-8 bg-gray-400 rounded-full"></div>
-            </div>
-        </div>
+         <!-- Top Bar -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="relative w-1/3">
+                        <input type="text" placeholder="Search"
+                            class="w-full border border-gray-300 rounded-full px-4 py-2
+                                focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                        <span
+                            class="iconify absolute right-3 top-1/2 -translate-y-1/2
+                                text-gray-400 pointer-events-none text-2xl"
+                            data-icon="ic:round-search">
+                        </span>
+                    </div>
+
+                    <!-- Right Icons -->
+                    <div class="flex items-center gap-4">
+
+                        <!-- Write Icon -->
+                        <a href="/writer/write">
+                            <span
+                                class="iconify text-blue-800 cursor-pointer text-4xl
+                                    hover:text-blue-600 transition"
+                                data-icon="jam:write">
+                            </span>
+                        </a>
+
+                        <!-- Profile / Logout -->
+                        <div onclick="document.getElementById('logout-form').submit()">
+                            <span
+                                class="iconify text-blue-800 cursor-pointer text-5xl
+                                    hover:text-blue-600 transition"
+                                data-icon="ic:round-account-circle">
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
 
         <!-- Tabs -->
         <div class="flex gap-6 border-b border-gray-200 mb-4 text-blue-900 font-body">
@@ -115,6 +154,10 @@
             </div>
         </div>
     </div>
+    </main>
+</div>
+</body>
+</html>
 
 <script>
     const tabs = document.querySelectorAll('.tab-btn');
@@ -131,5 +174,6 @@
         });
     });
 </script>
-</body>
-</html>
+<form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                @csrf
+</form>
